@@ -595,43 +595,6 @@ body {
   color: #fff;
 }
 
-/* ── Code Annotation Blocks ── */
-.code-annotation {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  padding: 16px 20px;
-  margin: 20px 0;
-  font-size: 13px;
-}
-
-.code-annotation summary {
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--accent);
-}
-
-.code-annotation pre {
-  margin-top: 12px;
-  background: #1e1e2e;
-  color: #cdd6f4;
-  padding: 16px;
-  border-radius: 6px;
-  overflow-x: auto;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.code-annotation pre .comment { color: #6c7086; }
-.code-annotation pre .keyword { color: #cba6f7; }
-.code-annotation pre .string { color: #a6e3a1; }
-.code-annotation pre .func { color: #89b4fa; }
-.code-annotation pre .bool { color: #fab387; }
-
 /* ── Footer ── */
 .footer {
   text-align: center;
