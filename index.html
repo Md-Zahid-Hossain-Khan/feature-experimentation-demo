@@ -4,608 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Opti Coffee — Feature Flag Demo</title>
-  <style>
-    :root {
-      --bg: #ffffff;
-      --bg-secondary: #f8f9fa;
-      --text: #1a1a2e;
-      --text-secondary: #6c757d;
-      --border: #e9ecef;
-      --accent: #0037ff;
-      --accent-hover: #0028cc;
-      --success: #28a745;
-      --warning: #ffc107;
-      --danger: #dc3545;
-      --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      --radius: 8px;
-    }
-
-    .dark-mode {
-      --bg: #1a1a2e;
-      --bg-secondary: #16213e;
-      --text: #e8e8e8;
-      --text-secondary: #a0a0b0;
-      --border: #2a2a4a;
-      --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      transition: background 0.3s, color 0.3s;
-      min-height: 100vh;
-    }
-
-    /* ── Setup Screen ── */
-    .setup-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .setup-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 560px;
-      width: 100%;
-      box-shadow: var(--card-shadow);
-    }
-
-    .setup-card h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .setup-card p {
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-
-    .setup-card input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 15px;
-      background: var(--bg);
-      color: var(--text);
-      margin-bottom: 16px;
-      outline: none;
-    }
-
-    .setup-card input:focus {
-      border-color: var(--accent);
-    }
-
-    .setup-card .btn-primary {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .setup-card .btn-primary:hover { background: var(--accent-hover); }
-
-    .setup-steps {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-
-    .setup-steps h3 {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
-    }
-
-    .setup-steps ol {
-      padding-left: 20px;
-      line-height: 2;
-      font-size: 14px;
-    }
-
-    .setup-steps code {
-      background: var(--bg-secondary);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 13px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-    }
-
-    .flag-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      font-size: 13px;
-    }
-
-    .flag-table th, .flag-table td {
-      text-align: left;
-      padding: 6px 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .flag-table th {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-
-    .setup-error {
-      color: var(--danger);
-      font-size: 14px;
-      margin-top: 8px;
-      display: none;
-    }
-
-    /* ── Promo Banner ── */
-    .promo-banner {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      text-align: center;
-      padding: 12px 20px;
-      font-weight: 600;
-      font-size: 14px;
-      display: none;
-    }
-
-    .promo-banner.visible { display: block; }
-
-    /* ── Navigation ── */
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
-
-    .navbar-brand {
-      font-size: 22px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .navbar-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
-    /* ── Main Content ── */
-    .main-content {
-      display: none;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px;
-    }
-
-    .main-content.visible { display: block; }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 40px;
-    }
-
-    .product-image {
-      background: linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 100%);
-      border-radius: 12px;
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 120px;
-    }
-
-    .product-info { padding: 20px 0; }
-
-    .product-info h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-
-    .product-info .description {
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 24px;
-      font-size: 15px;
-    }
-
-    .price-tag {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .price-subtitle {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-    }
-
-    .btn-checkout {
-      padding: 14px 32px;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-checkout.control {
-      background: #6c757d;
-      color: #fff;
-    }
-
-    .btn-checkout.control:hover { background: #5a6268; }
-
-    .btn-checkout.variation {
-      background: var(--success);
-      color: #fff;
-    }
-
-    .btn-checkout.variation:hover { background: #218838; }
-
-    /* ── Use Case Labels ── */
-    .use-case-label {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 4px 10px;
-      border-radius: 4px;
-      margin-bottom: 12px;
-    }
-
-    .use-case-label.rollout {
-      background: #e3f2fd;
-      color: #1565c0;
-    }
-
-    .use-case-label.experiment {
-      background: #fce4ec;
-      color: #c62828;
-    }
-
-    .use-case-label.targeted {
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-
-    .dark-mode .use-case-label.rollout { background: #1a3a5c; color: #64b5f6; }
-    .dark-mode .use-case-label.experiment { background: #4a1a2a; color: #ef9a9a; }
-    .dark-mode .use-case-label.targeted { background: #1a3a2a; color: #81c784; }
-
-    /* ── VIP Section ── */
-    .vip-section {
-      border: 2px solid var(--warning);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 40px;
-      background: linear-gradient(135deg, rgba(255,193,7,0.08) 0%, rgba(255,152,0,0.08) 100%);
-      display: none;
-    }
-
-    .vip-section.visible { display: block; }
-
-    .vip-section h2 {
-      font-size: 20px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .vip-section p {
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .vip-perks {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .vip-perk {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      font-size: 14px;
-    }
-
-    /* ── Control Panel ── */
-    .control-panel {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 380px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-      z-index: 1000;
-      overflow: hidden;
-    }
-
-    .panel-header {
-      background: var(--accent);
-      color: #fff;
-      padding: 12px 16px;
-      font-weight: 700;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .panel-header .toggle-arrow {
-      transition: transform 0.2s;
-    }
-
-    .panel-header .toggle-arrow.collapsed {
-      transform: rotate(180deg);
-    }
-
-    .panel-body {
-      padding: 16px;
-      max-height: 500px;
-      overflow-y: auto;
-    }
-
-    .panel-body.collapsed {
-      display: none;
-    }
-
-    .panel-notice {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    .panel-section {
-      margin-bottom: 16px;
-    }
-
-    .panel-section:last-child { margin-bottom: 0; }
-
-    .panel-section-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-
-    .panel-section-hint {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-
-    .panel-status-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-secondary);
-      padding: 8px 0;
-      border-top: 1px solid var(--border);
-      margin-top: 8px;
-    }
-
-    .flag-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 13px;
-    }
-
-    .flag-row:last-child { border-bottom: none; }
-
-    .flag-key {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 12px;
-    }
-
-    .flag-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .flag-status.on { background: #d4edda; color: #155724; }
-    .flag-status.off { background: #f8d7da; color: #721c24; }
-    .flag-status.var-a { background: #cce5ff; color: #004085; }
-    .flag-status.var-b { background: #fff3cd; color: #856404; }
-
-    .dark-mode .flag-status.on { background: #1a3a2a; color: #81c784; }
-    .dark-mode .flag-status.off { background: #3a1a1a; color: #ef9a9a; }
-    .dark-mode .flag-status.var-a { background: #1a2a3a; color: #64b5f6; }
-    .dark-mode .flag-status.var-b { background: #3a3a1a; color: #fff176; }
-
-    .user-input-group {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .user-input-group input {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 13px;
-      background: var(--bg-secondary);
-      color: var(--text);
-      font-family: 'SF Mono', 'Fira Code', monospace;
-    }
-
-    .user-input-group select {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 13px;
-      background: var(--bg-secondary);
-      color: var(--text);
-    }
-
-    .btn-sm {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .btn-sm:hover { background: var(--accent-hover); }
-
-    .status-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
-
-    .status-dot.green { background: var(--success); }
-    .status-dot.yellow { background: var(--warning); }
-    .status-dot.red { background: var(--danger); }
-
-    .variation-badge {
-      display: inline-block;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-
-    .btn-disconnect {
-      width: 100%;
-      padding: 8px;
-      background: transparent;
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .btn-disconnect:hover {
-      background: var(--danger);
-      color: #fff;
-    }
-
-    /* ── Code Annotation Blocks ── */
-    .code-annotation {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 16px 20px;
-      margin: 20px 0;
-      font-size: 13px;
-    }
-
-    .code-annotation summary {
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--accent);
-    }
-
-    .code-annotation pre {
-      margin-top: 12px;
-      background: #1e1e2e;
-      color: #cdd6f4;
-      padding: 16px;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .code-annotation pre .comment { color: #6c7086; }
-    .code-annotation pre .keyword { color: #cba6f7; }
-    .code-annotation pre .string { color: #a6e3a1; }
-    .code-annotation pre .func { color: #89b4fa; }
-    .code-annotation pre .bool { color: #fab387; }
-
-    /* ── Footer ── */
-    .footer {
-      text-align: center;
-      padding: 40px;
-      color: var(--text-secondary);
-      font-size: 13px;
-      border-top: 1px solid var(--border);
-    }
-
-    @media (max-width: 768px) {
-      .product-grid { grid-template-columns: 1fr; }
-      .navbar { padding: 16px 20px; }
-      .main-content { padding: 20px; }
-      .control-panel { width: calc(100% - 40px); left: 20px; }
-      .vip-perks { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ════════════════ SETUP SCREEN ════════════════ -->
+  <!-- Setup Screen -->
   <div id="setup-screen" class="setup-screen">
     <div class="setup-card">
       <h1>Feature Flag Demo</h1>
@@ -624,16 +27,8 @@
           <tbody>
             <tr><td><code>dark_mode</code></td><td>Toggle dark theme</td><td>Rollout (on/off)</td></tr>
             <tr><td><code>promo_banner</code></td><td>Show/hide banner</td><td>Rollout (on/off)</td></tr>
-            <tr>
-              <td><code>checkout_button</code></td>
-              <td>A/B test button style</td>
-              <td>Experiment (2 variations)</td>
-            </tr>
-            <tr>
-              <td><code>pricing_display</code></td>
-              <td>A/B test pricing model</td>
-              <td>Experiment with variables</td>
-            </tr>
+            <tr><td><code>checkout_button</code></td><td>A/B test button style</td><td>Experiment (2 variations)</td></tr>
+            <tr><td><code>pricing_display</code></td><td>A/B test pricing model</td><td>Experiment with variables</td></tr>
             <tr><td><code>vip_section</code></td><td>Premium-only content</td><td>Targeted delivery</td></tr>
           </tbody>
         </table>
@@ -649,12 +44,12 @@
     </div>
   </div>
 
-  <!-- ════════════════ PROMO BANNER ════════════════ -->
+  <!-- Promo Banner -->
   <div id="promo-banner" class="promo-banner">
     20% OFF your first order! Use code <strong>OPTICOFFEE20</strong> at checkout
   </div>
 
-  <!-- ════════════════ NAVBAR ════════════════ -->
+  <!-- Navbar -->
   <nav class="navbar" id="navbar" style="display:none;">
     <div class="navbar-brand">&#9749; Opti Coffee</div>
     <div class="navbar-right">
@@ -662,7 +57,7 @@
     </div>
   </nav>
 
-  <!-- ════════════════ MAIN CONTENT ════════════════ -->
+  <!-- Main Content -->
   <div id="main-content" class="main-content">
 
     <div class="product-grid">
@@ -673,14 +68,14 @@
           Single-origin specialty coffee from the birthplace of coffee. Bright, fruity notes with a floral aroma and wine-like acidity. Light roast to preserve the complex natural flavors.
         </p>
 
-        <!-- ── PRICING (A/B Experiment with Variables) ── -->
+        <!-- Pricing (A/B Experiment with Variables) -->
         <div>
           <span class="use-case-label experiment">A/B Experiment &mdash; pricing_display</span>
           <div id="price-tag" class="price-tag">$14.99</div>
           <div id="price-subtitle" class="price-subtitle">per 12oz bag</div>
         </div>
 
-        <!-- ── CHECKOUT BUTTON (A/B Experiment) ── -->
+        <!-- Checkout Button (A/B Experiment) -->
         <div>
           <span class="use-case-label experiment">A/B Experiment &mdash; checkout_button</span>
           <br>
@@ -707,7 +102,7 @@
       </div>
     </div>
 
-    <!-- ── VIP SECTION (Targeted Delivery) ── -->
+    <!-- VIP Section (Targeted Delivery) -->
     <div id="vip-section" class="vip-section">
       <span class="use-case-label targeted">Targeted Delivery &mdash; vip_section</span>
       <h2>&#11088; VIP Member Exclusive</h2>
@@ -742,7 +137,7 @@
     </div>
   </div>
 
-  <!-- ════════════════ SDK INSPECTOR PANEL ════════════════ -->
+  <!-- SDK Inspector Panel -->
   <div id="control-panel" class="control-panel" style="display:none;">
     <div class="panel-header" onclick="togglePanel()">
       <span>&#128269; What the SDK Sees</span>
@@ -752,7 +147,7 @@
 
       <div class="panel-notice">Read-only &mdash; toggle flags in <strong>app.optimizely.com</strong> to change these decisions</div>
 
-      <!-- Section 1: Input -->
+      <!-- Input: User Context -->
       <div class="panel-section">
         <div class="panel-section-title">&#9654; Your app sends this</div>
         <div class="panel-section-hint">In a real app, this comes from your auth system. Change it here to simulate different users.</div>
@@ -774,7 +169,7 @@
         </div>
       </div>
 
-      <!-- Section 2: Output -->
+      <!-- Output: SDK Decisions -->
       <div class="panel-section">
         <div class="panel-section-title">&#9654; SDK decides this</div>
         <div class="flag-row">
@@ -799,7 +194,7 @@
         </div>
       </div>
 
-      <!-- Section 3: Status bar -->
+      <!-- Status Bar -->
       <div class="panel-status-bar">
         <span><span id="sdk-status-dot" class="status-dot yellow"></span><span id="sdk-status-text">Connecting...</span></span>
         <span>Rev: <span id="datafile-revision">&mdash;</span></span>
@@ -810,288 +205,8 @@
     </div>
   </div>
 
-  <!-- ════════════════ OPTIMIZELY SDK ════════════════ -->
+  <!-- Optimizely SDK -->
   <script src="https://unpkg.com/@optimizely/optimizely-sdk@5/dist/optimizely.browser.umd.min.js"></script>
-
-  <script>
-    let client = null;
-    let currentUserId = 'user-123';
-    let currentAttributes = { plan: 'free', country: 'US' };
-    let panelCollapsed = false;
-
-    // ── Setup / Connect ──
-
-    function connectSDK() {
-      const sdkKey = document.getElementById('sdk-key-input').value.trim();
-      if (!sdkKey) {
-        showError('Please enter your SDK Key');
-        return;
-      }
-
-      const btn = document.getElementById('connect-btn');
-      btn.textContent = 'Connecting...';
-      btn.disabled = true;
-      showError('');
-      localStorage.setItem('opti_demo_sdk_key', sdkKey);
-      initializeSDK(sdkKey);
-    }
-
-    function resetConnectButton() {
-      const btn = document.getElementById('connect-btn');
-      if (btn) {
-        btn.textContent = 'Connect & Launch Demo';
-        btn.disabled = false;
-      }
-    }
-
-    function initializeSDK(sdkKey) {
-      try {
-        client = window.optimizelySdk.createInstance({
-          sdkKey: sdkKey,
-          datafileOptions: {
-            autoUpdate: true,
-            updateInterval: 30000
-          }
-        });
-
-        client.onReady({ timeout: 10000 }).then((result) => {
-          if (result.success) {
-            showApp();
-            updateSDKStatus('ready');
-            evaluateAllFlags();
-
-            client.notificationCenter.addNotificationListener(
-              window.optimizelySdk.enums.NOTIFICATION_TYPES.OPTIMIZELY_CONFIG_UPDATE,
-              () => {
-                evaluateAllFlags();
-                updateLastUpdated();
-              }
-            );
-          } else {
-            updateSDKStatus('error');
-            resetConnectButton();
-            showError('SDK failed to initialize. Check your SDK Key and that flags exist in your project.');
-          }
-        }).catch(() => {
-          updateSDKStatus('error');
-          resetConnectButton();
-          showError('Connection timeout. Check your SDK Key.');
-        });
-      } catch (e) {
-        resetConnectButton();
-        showError('Error: ' + e.message);
-      }
-    }
-
-    function showApp() {
-      document.getElementById('setup-screen').style.display = 'none';
-      document.getElementById('navbar').style.display = 'flex';
-      document.getElementById('main-content').classList.add('visible');
-      document.getElementById('control-panel').style.display = 'block';
-    }
-
-    function showError(msg) {
-      const el = document.getElementById('setup-error');
-      if (!el) {
-        if (msg) {
-          localStorage.removeItem('opti_demo_sdk_key');
-          location.reload();
-        }
-        return;
-      }
-      el.textContent = msg;
-      el.style.display = msg ? 'block' : 'none';
-    }
-
-    // ── Flag Evaluation ──
-
-    function evaluateAllFlags() {
-      if (!client) return;
-
-      const user = client.createUserContext(currentUserId, currentAttributes);
-      if (!user) return;
-
-      evaluateDarkMode(user);
-      evaluatePromoBanner(user);
-      evaluateCheckoutButton(user);
-      evaluatePricingDisplay(user);
-      evaluateVipSection(user);
-      updateDatafileInfo();
-    }
-
-    function evaluateDarkMode(user) {
-      const decision = user.decide('dark_mode');
-      if (decision.enabled) {
-        document.body.classList.add('dark-mode');
-        updateFlagIndicator('flag-dark', true, 'ON');
-      } else {
-        document.body.classList.remove('dark-mode');
-        updateFlagIndicator('flag-dark', false, 'OFF');
-      }
-    }
-
-    function evaluatePromoBanner(user) {
-      const decision = user.decide('promo_banner');
-      const banner = document.getElementById('promo-banner');
-
-      if (decision.enabled) {
-        banner.classList.add('visible');
-        updateFlagIndicator('flag-promo', true, 'ON');
-      } else {
-        banner.classList.remove('visible');
-        updateFlagIndicator('flag-promo', false, 'OFF');
-      }
-    }
-
-    function evaluateCheckoutButton(user) {
-      const decision = user.decide('checkout_button');
-      const btn = document.getElementById('checkout-btn');
-      const badge = document.getElementById('checkout-variation-badge');
-
-      if (!decision.enabled || !decision.variationKey) {
-        btn.className = 'btn-checkout control';
-        btn.textContent = 'Add to Cart';
-        badge.textContent = '';
-        updateFlagIndicator('flag-checkout', false, 'OFF');
-        return;
-      }
-
-      const vKey = decision.variationKey.toLowerCase();
-      const isControl = vKey === 'off' || vKey === 'control' || vKey.includes('a');
-
-      if (isControl) {
-        btn.className = 'btn-checkout control';
-        btn.textContent = 'Add to Cart';
-        badge.textContent = 'You are in: ' + decision.variationKey + ' (Control)';
-        badge.style.background = '#cce5ff';
-        badge.style.color = '#004085';
-        updateFlagIndicator('flag-checkout', true, decision.variationKey, 'var-a');
-      } else {
-        btn.className = 'btn-checkout variation';
-        btn.textContent = 'Buy Now — Free Shipping!';
-        badge.textContent = 'You are in: ' + decision.variationKey + ' (Treatment)';
-        badge.style.background = '#fff3cd';
-        badge.style.color = '#856404';
-        updateFlagIndicator('flag-checkout', true, decision.variationKey, 'var-b');
-      }
-    }
-
-    function evaluatePricingDisplay(user) {
-      const decision = user.decide('pricing_display');
-      const priceTag = document.getElementById('price-tag');
-      const priceSubtitle = document.getElementById('price-subtitle');
-
-      if (!decision.enabled) {
-        priceTag.textContent = '$14.99';
-        priceSubtitle.textContent = 'per 12oz bag';
-        updateFlagIndicator('flag-pricing', false, 'OFF');
-        return;
-      }
-
-      const priceText = decision.variables && decision.variables['price_text'];
-      const vKey = (decision.variationKey || '').toLowerCase();
-      const isControl = vKey === 'off' || vKey === 'control' || vKey.includes('a');
-
-      if (priceText) {
-        priceTag.textContent = priceText;
-        priceSubtitle.textContent = 'experiment — ' + decision.variationKey;
-      } else if (isControl) {
-        priceTag.textContent = '$14.99';
-        priceSubtitle.textContent = 'per 12oz bag (control)';
-      } else {
-        priceTag.textContent = '$9.99/mo';
-        priceSubtitle.textContent = 'subscription — cancel anytime';
-      }
-
-      updateFlagIndicator('flag-pricing', true, decision.variationKey || 'ON', isControl ? 'var-a' : 'var-b');
-    }
-
-    function evaluateVipSection(user) {
-      const decision = user.decide('vip_section');
-      const section = document.getElementById('vip-section');
-
-      if (decision.enabled) {
-        section.classList.add('visible');
-        updateFlagIndicator('flag-vip', true, 'ON');
-      } else {
-        section.classList.remove('visible');
-        updateFlagIndicator('flag-vip', false, 'OFF');
-      }
-    }
-
-    // ── UI Helpers ──
-
-    function updateFlagIndicator(elementId, isOn, label, extraClass) {
-      const el = document.getElementById(elementId);
-      el.textContent = label || (isOn ? 'ON' : 'OFF');
-      el.className = 'flag-status ' + (extraClass || (isOn ? 'on' : 'off'));
-    }
-
-    function updateSDKStatus(status) {
-      const dot = document.getElementById('sdk-status-dot');
-      const text = document.getElementById('sdk-status-text');
-
-      if (status === 'ready') {
-        dot.className = 'status-dot green';
-        text.textContent = 'Connected';
-        updateLastUpdated();
-      } else if (status === 'error') {
-        dot.className = 'status-dot red';
-        text.textContent = 'Error';
-      }
-    }
-
-    function updateLastUpdated() {
-      document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
-    }
-
-    function updateDatafileInfo() {
-      if (!client) return;
-      const config = client.getOptimizelyConfig();
-      if (config) {
-        document.getElementById('datafile-revision').textContent = config.revision || '—';
-      }
-    }
-
-    function updateUser() {
-      currentUserId = document.getElementById('user-id-input').value.trim() || 'user-123';
-      currentAttributes.plan = document.getElementById('user-plan-select').value;
-      currentAttributes.country = document.getElementById('user-country-select').value;
-      evaluateAllFlags();
-
-      const btn = document.getElementById('evaluate-btn');
-      btn.textContent = 'Re-evaluated';
-      btn.style.background = '#28a745';
-      setTimeout(() => {
-        btn.textContent = 'Evaluate';
-        btn.style.background = '';
-      }, 800);
-    }
-
-    function togglePanel() {
-      panelCollapsed = !panelCollapsed;
-      document.getElementById('panel-body').classList.toggle('collapsed', panelCollapsed);
-      document.getElementById('toggle-arrow').classList.toggle('collapsed', panelCollapsed);
-    }
-
-    function disconnect() {
-      localStorage.removeItem('opti_demo_sdk_key');
-      if (client) {
-        client.close();
-        client = null;
-      }
-      location.reload();
-    }
-
-    // ── Auto-connect if SDK key is saved ──
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedKey = localStorage.getItem('opti_demo_sdk_key');
-      if (savedKey) {
-        document.getElementById('setup-screen').innerHTML =
-          '<div class="setup-card" style="text-align:center;"><h1>Connecting...</h1><p>Loading feature flags from Optimizely</p></div>';
-        initializeSDK(savedKey);
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
