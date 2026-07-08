@@ -439,6 +439,56 @@ body {
 
 .flag-row:last-child { border-bottom: none; }
 
+.flag-decision-row {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.flag-decision-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.flag-decision-row .flag-row {
+  border-bottom: none;
+}
+
+.decision-json {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin: 0 0 4px 0;
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.datafile-viewer summary {
+  margin-bottom: 8px;
+}
+
+.datafile-json {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
 .flag-key {
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 12px;

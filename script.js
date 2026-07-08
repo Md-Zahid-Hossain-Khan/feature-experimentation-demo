@@ -201,6 +201,7 @@ function evaluateAllFlags() {
   evaluatePricingDisplay(user);
   evaluateVipSection(user);
   updateDatafileInfo();
+  updateRawDatafile();
 }
 
 /**
@@ -211,6 +212,7 @@ function evaluateAllFlags() {
  */
 function evaluateDarkMode(user) {
   const decision = user.decide('dark_mode');
+  updateDecisionDisplay('dark_mode', decision);
   if (decision.enabled) {
     document.body.classList.add('dark-mode');
     updateFlagIndicator('flag-dark', true, 'ON');
@@ -228,6 +230,7 @@ function evaluateDarkMode(user) {
  */
 function evaluatePromoBanner(user) {
   const decision = user.decide('promo_banner');
+  updateDecisionDisplay('promo_banner', decision);
   const banner = document.getElementById('promo-banner');
 
   if (decision.enabled) {
@@ -258,6 +261,7 @@ function evaluatePromoBanner(user) {
  */
 function evaluateCheckoutButton(user) {
   const decision = user.decide('checkout_button');
+  updateDecisionDisplay('checkout_button', decision);
   const btn = document.getElementById('checkout-btn');
   const badge = document.getElementById('checkout-variation-badge');
 
@@ -306,6 +310,7 @@ function evaluateCheckoutButton(user) {
  */
 function evaluatePricingDisplay(user) {
   const decision = user.decide('pricing_display');
+  updateDecisionDisplay('pricing_display', decision);
   const priceTag = document.getElementById('price-tag');
   const priceSubtitle = document.getElementById('price-subtitle');
 
@@ -353,6 +358,7 @@ function evaluatePricingDisplay(user) {
  */
 function evaluateVipSection(user) {
   const decision = user.decide('vip_section');
+  updateDecisionDisplay('vip_section', decision);
   const section = document.getElementById('vip-section');
 
   if (decision.enabled) {
@@ -361,6 +367,75 @@ function evaluateVipSection(user) {
   } else {
     section.classList.remove('visible');
     updateFlagIndicator('flag-vip', false, 'OFF');
+  }
+}
+
+
+// ──────────────────────────────────────────────
+// Decision Display
+//
+// Shows the raw decision object the SDK returned for each flag.
+// This makes the SDK's output transparent — you can see exactly
+// what decision.enabled, decision.variationKey, and
+// decision.variables contain.
+// ──────────────────────────────────────────────
+
+/**
+ * Formats a decision object into a readable JSON string for display.
+ * Only includes the fields that matter: enabled, variationKey, variables.
+ * @param {Object} decision - The OptimizelyDecision object from user.decide()
+ * @returns {string} Formatted JSON string
+ */
+function formatDecision(decision) {
+  const display = {
+    enabled: decision.enabled,
+    variationKey: decision.variationKey || null,
+  };
+
+  // Only include variables if there are any
+  if (decision.variables && Object.keys(decision.variables).length > 0) {
+    display.variables = decision.variables;
+  }
+
+  return JSON.stringify(display, null, 2);
+}
+
+/**
+ * Updates the decision JSON display for a specific flag.
+ * Called by each evaluate function after getting a decision.
+ * @param {string} flagKey - The flag key (e.g., "dark_mode")
+ * @param {Object} decision - The OptimizelyDecision object
+ */
+function updateDecisionDisplay(flagKey, decision) {
+  const el = document.getElementById('decision-' + flagKey);
+  if (el) {
+    el.textContent = formatDecision(decision);
+  }
+}
+
+/**
+ * Updates the raw datafile viewer with the full JSON datafile
+ * the SDK currently has in memory. Called after initial load
+ * and each time the SDK polls a new datafile.
+ */
+function updateRawDatafile() {
+  if (!client) return;
+  const el = document.getElementById('raw-datafile');
+  if (!el) return;
+
+  try {
+    const config = client.getOptimizelyConfig();
+    if (config) {
+      // getOptimizelyConfig returns a structured object.
+      // For the full raw datafile, we access the client's internal
+      // config manager. Fall back to the structured config if not available.
+      const datafile = client.configManager && client.configManager.get
+        ? client.configManager.get()
+        : config;
+      el.textContent = JSON.stringify(datafile, null, 2);
+    }
+  } catch (e) {
+    el.textContent = 'Could not load raw datafile: ' + e.message;
   }
 }
 

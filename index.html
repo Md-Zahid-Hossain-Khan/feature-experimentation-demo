@@ -195,7 +195,7 @@
 
     <div class="footer">
       <p><strong>Opti Coffee</strong> is a fictional demo store for the Feature Experimentation Demo.</p>
-      <p style="margin-top: 4px;">Built by Zahid Hossain for mentorship with Abu Siddik.</p>
+      <p style="margin-top: 4px;">Built By Md. Zahid Hossain Khan (zahid.hossain@optimizely.com)</p>
     </div>
   </div>
 
@@ -255,33 +255,63 @@
 
       <!--
         SECTION 2: OUTPUT — What the SDK decided for each flag
-        These values come from evaluating the datafile against
-        the current user context. They update when:
+        Shows both the flag status badge AND the raw decision
+        object the SDK returned. Updates when:
         - You change the user context and click Evaluate
         - The SDK polls a new datafile from Optimizely (~30s)
       -->
       <div class="panel-section">
         <div class="panel-section-title">&#9654; SDK decides this</div>
-        <div class="flag-row">
-          <span class="flag-key">dark_mode</span>
-          <span id="flag-dark" class="flag-status off">OFF</span>
+        <div class="flag-decision-row">
+          <div class="flag-row">
+            <span class="flag-key">dark_mode</span>
+            <span id="flag-dark" class="flag-status off">OFF</span>
+          </div>
+          <pre id="decision-dark_mode" class="decision-json"></pre>
         </div>
-        <div class="flag-row">
-          <span class="flag-key">promo_banner</span>
-          <span id="flag-promo" class="flag-status off">OFF</span>
+        <div class="flag-decision-row">
+          <div class="flag-row">
+            <span class="flag-key">promo_banner</span>
+            <span id="flag-promo" class="flag-status off">OFF</span>
+          </div>
+          <pre id="decision-promo_banner" class="decision-json"></pre>
         </div>
-        <div class="flag-row">
-          <span class="flag-key">checkout_button</span>
-          <span id="flag-checkout" class="flag-status off">OFF</span>
+        <div class="flag-decision-row">
+          <div class="flag-row">
+            <span class="flag-key">checkout_button</span>
+            <span id="flag-checkout" class="flag-status off">OFF</span>
+          </div>
+          <pre id="decision-checkout_button" class="decision-json"></pre>
         </div>
-        <div class="flag-row">
-          <span class="flag-key">pricing_display</span>
-          <span id="flag-pricing" class="flag-status off">OFF</span>
+        <div class="flag-decision-row">
+          <div class="flag-row">
+            <span class="flag-key">pricing_display</span>
+            <span id="flag-pricing" class="flag-status off">OFF</span>
+          </div>
+          <pre id="decision-pricing_display" class="decision-json"></pre>
         </div>
-        <div class="flag-row">
-          <span class="flag-key">vip_section</span>
-          <span id="flag-vip" class="flag-status off">OFF</span>
+        <div class="flag-decision-row">
+          <div class="flag-row">
+            <span class="flag-key">vip_section</span>
+            <span id="flag-vip" class="flag-status off">OFF</span>
+          </div>
+          <pre id="decision-vip_section" class="decision-json"></pre>
         </div>
+      </div>
+
+      <!--
+        SECTION 2b: RAW DATAFILE
+        Collapsible section showing the full datafile JSON that
+        the SDK downloaded from CDN. This is the compiled output
+        of everything configured in Optimizely — all flags, rules,
+        audiences, experiments, and variables in one JSON file.
+        Updates each time the SDK polls a new revision.
+      -->
+      <div class="panel-section">
+        <details class="datafile-viewer">
+          <summary class="panel-section-title" style="cursor: pointer;">&#9654; Raw Datafile from CDN (click to expand)</summary>
+          <pre id="raw-datafile" class="datafile-json">Connect SDK to see datafile...</pre>
+        </details>
       </div>
 
       <!--
