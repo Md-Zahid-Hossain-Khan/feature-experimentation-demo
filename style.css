@@ -282,11 +282,6 @@ body {
   margin-bottom: 12px;
 }
 
-.use-case-label.rollout {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
 .use-case-label.experiment {
   background: #fce4ec;
   color: #c62828;
@@ -297,7 +292,6 @@ body {
   color: #2e7d32;
 }
 
-.dark-mode .use-case-label.rollout { background: #1a3a5c; color: #64b5f6; }
 .dark-mode .use-case-label.experiment { background: #4a1a2a; color: #ef9a9a; }
 .dark-mode .use-case-label.targeted { background: #1a3a2a; color: #81c784; }
 
