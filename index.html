@@ -267,35 +267,50 @@
             <span class="flag-key">dark_mode</span>
             <span id="flag-dark" class="flag-status off">OFF</span>
           </div>
-          <pre id="decision-dark_mode" class="decision-json"></pre>
+          <div class="decision-json-wrap">
+            <pre id="decision-dark_mode" class="decision-json"></pre>
+            <button class="btn-expand" onclick="openJsonModal('dark_mode', 'decision-dark_mode')" title="Expand">&#x26F6;</button>
+          </div>
         </div>
         <div class="flag-decision-row">
           <div class="flag-row">
             <span class="flag-key">promo_banner</span>
             <span id="flag-promo" class="flag-status off">OFF</span>
           </div>
-          <pre id="decision-promo_banner" class="decision-json"></pre>
+          <div class="decision-json-wrap">
+            <pre id="decision-promo_banner" class="decision-json"></pre>
+            <button class="btn-expand" onclick="openJsonModal('promo_banner', 'decision-promo_banner')" title="Expand">&#x26F6;</button>
+          </div>
         </div>
         <div class="flag-decision-row">
           <div class="flag-row">
             <span class="flag-key">checkout_button</span>
             <span id="flag-checkout" class="flag-status off">OFF</span>
           </div>
-          <pre id="decision-checkout_button" class="decision-json"></pre>
+          <div class="decision-json-wrap">
+            <pre id="decision-checkout_button" class="decision-json"></pre>
+            <button class="btn-expand" onclick="openJsonModal('checkout_button', 'decision-checkout_button')" title="Expand">&#x26F6;</button>
+          </div>
         </div>
         <div class="flag-decision-row">
           <div class="flag-row">
             <span class="flag-key">pricing_display</span>
             <span id="flag-pricing" class="flag-status off">OFF</span>
           </div>
-          <pre id="decision-pricing_display" class="decision-json"></pre>
+          <div class="decision-json-wrap">
+            <pre id="decision-pricing_display" class="decision-json"></pre>
+            <button class="btn-expand" onclick="openJsonModal('pricing_display', 'decision-pricing_display')" title="Expand">&#x26F6;</button>
+          </div>
         </div>
         <div class="flag-decision-row">
           <div class="flag-row">
             <span class="flag-key">vip_section</span>
             <span id="flag-vip" class="flag-status off">OFF</span>
           </div>
-          <pre id="decision-vip_section" class="decision-json"></pre>
+          <div class="decision-json-wrap">
+            <pre id="decision-vip_section" class="decision-json"></pre>
+            <button class="btn-expand" onclick="openJsonModal('vip_section', 'decision-vip_section')" title="Expand">&#x26F6;</button>
+          </div>
         </div>
       </div>
 
@@ -310,7 +325,10 @@
       <div class="panel-section">
         <details class="datafile-viewer">
           <summary class="panel-section-title" style="cursor: pointer;">&#9654; Raw Datafile from CDN (click to expand)</summary>
-          <pre id="raw-datafile" class="datafile-json">Connect SDK to see datafile...</pre>
+          <div class="datafile-json-wrap">
+            <pre id="raw-datafile" class="datafile-json">Connect SDK to see datafile...</pre>
+            <button class="btn-expand btn-expand-datafile" onclick="openJsonModal('Raw Datafile', 'raw-datafile')" title="Open fullscreen">&#x26F6;</button>
+          </div>
         </details>
       </div>
 
@@ -328,6 +346,25 @@
 
       <!-- Clears the saved SDK key from localStorage and reloads -->
       <button class="btn-disconnect" onclick="disconnect()">Disconnect &amp; Reset SDK Key</button>
+    </div>
+  </div>
+
+  <!--
+    ============================================================
+    FULLSCREEN JSON MODAL
+    Opens when the user clicks an "expand" button on any decision
+    object or the raw datafile. Shows the JSON in a centered
+    overlay with proper formatting. Closes on clicking the X,
+    the backdrop, or pressing Escape.
+    ============================================================
+  -->
+  <div id="json-modal" class="json-modal" onclick="closeModalOnBackdrop(event)">
+    <div class="json-modal-content">
+      <div class="json-modal-header">
+        <span id="json-modal-title">JSON</span>
+        <button class="json-modal-close" onclick="closeJsonModal()">&times;</button>
+      </div>
+      <pre id="json-modal-body" class="json-modal-body"></pre>
     </div>
   </div>
 

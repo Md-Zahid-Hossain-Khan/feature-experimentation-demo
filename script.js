@@ -547,6 +547,51 @@ function disconnect() {
 
 
 // ──────────────────────────────────────────────
+// Fullscreen JSON Modal
+//
+// Opens a centered overlay showing JSON content in a readable
+// format. Used for expanding decision objects and the raw
+// datafile. Closes on X button, backdrop click, or Escape key.
+// ──────────────────────────────────────────────
+
+/**
+ * Opens the fullscreen modal with JSON content from a source element.
+ * @param {string} title - Display title (e.g., flag key or "Raw Datafile")
+ * @param {string} sourceId - DOM id of the <pre> element containing the JSON
+ */
+function openJsonModal(title, sourceId) {
+  const source = document.getElementById(sourceId);
+  if (!source) return;
+
+  document.getElementById('json-modal-title').textContent = title;
+  document.getElementById('json-modal-body').textContent = source.textContent;
+  document.getElementById('json-modal').classList.add('visible');
+}
+
+/**
+ * Closes the fullscreen modal.
+ */
+function closeJsonModal() {
+  document.getElementById('json-modal').classList.remove('visible');
+}
+
+/**
+ * Closes the modal when clicking the backdrop (outside the content).
+ * Clicking inside the modal content does nothing (event doesn't propagate).
+ */
+function closeModalOnBackdrop(event) {
+  if (event.target === document.getElementById('json-modal')) {
+    closeJsonModal();
+  }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeJsonModal();
+});
+
+
+// ──────────────────────────────────────────────
 // Auto-connect on page load
 //
 // If the user previously connected (SDK key saved in localStorage),
