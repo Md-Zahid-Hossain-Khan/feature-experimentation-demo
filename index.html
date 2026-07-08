@@ -8,7 +8,15 @@
 </head>
 <body>
 
-  <!-- Setup Screen -->
+  <!--
+    ============================================================
+    SETUP SCREEN
+    Shown on first visit. The user pastes their Optimizely SDK
+    key here. Once connected, this screen is hidden and the
+    store page is displayed. The SDK key is saved in localStorage
+    so returning visitors skip this screen automatically.
+    ============================================================
+  -->
   <div id="setup-screen" class="setup-screen">
     <div class="setup-card">
       <h1>Feature Flag Demo</h1>
@@ -38,18 +46,35 @@
         </ol>
       </div>
 
+      <!-- SDK key input — Enter key also submits (see onkeydown) -->
       <input type="text" id="sdk-key-input" placeholder="Paste your SDK Key here (e.g., KynJYmzPA1y...)" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')connectSDK()">
       <button id="connect-btn" class="btn-primary" onclick="connectSDK()">Connect &amp; Launch Demo</button>
       <p id="setup-error" class="setup-error"></p>
     </div>
   </div>
 
-  <!-- Promo Banner -->
+  <!--
+    ============================================================
+    FLAG: promo_banner (Feature Rollout)
+    Controlled by the "promo_banner" flag in Optimizely.
+    When the flag is ON → banner is visible (CSS class "visible").
+    When the flag is OFF → banner is hidden (default state).
+    Use case: release control — marketing can show/hide promos
+    without a code deploy.
+    ============================================================
+  -->
   <div id="promo-banner" class="promo-banner">
     20% OFF your first order! Use code <strong>OPTICOFFEE20</strong> at checkout
   </div>
 
-  <!-- Navbar -->
+  <!--
+    ============================================================
+    NAVBAR
+    Hidden until SDK connects. The entire store page (navbar +
+    main content + inspector panel) becomes visible together
+    after successful SDK initialization.
+    ============================================================
+  -->
   <nav class="navbar" id="navbar" style="display:none;">
     <div class="navbar-brand">&#9749; Opti Coffee</div>
     <div class="navbar-right">
@@ -57,7 +82,13 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
+  <!--
+    ============================================================
+    MAIN CONTENT — THE STORE PAGE
+    Contains the product listing with flag-controlled elements.
+    Hidden until SDK connects (CSS class "visible" added by JS).
+    ============================================================
+  -->
   <div id="main-content" class="main-content">
 
     <div class="product-grid">
@@ -68,14 +99,33 @@
           Single-origin specialty coffee from the birthplace of coffee. Bright, fruity notes with a floral aroma and wine-like acidity. Light roast to preserve the complex natural flavors.
         </p>
 
-        <!-- Pricing (A/B Experiment with Variables) -->
+        <!--
+          FLAG: pricing_display (A/B Experiment with Variables)
+          Controlled by the "pricing_display" flag in Optimizely.
+          This flag has a variable "price_text" (string type).
+          - Variation A returns price_text = "$14.99"
+          - Variation B returns price_text = "$9.99/mo"
+          The SDK reads decision.variables['price_text'] and
+          displays whatever value Optimizely returns.
+          Use case: A/B testing pricing models with real data.
+        -->
         <div>
           <span class="use-case-label experiment">A/B Experiment &mdash; pricing_display</span>
           <div id="price-tag" class="price-tag">$14.99</div>
           <div id="price-subtitle" class="price-subtitle">per 12oz bag</div>
         </div>
 
-        <!-- Checkout Button (A/B Experiment) -->
+        <!--
+          FLAG: checkout_button (A/B Experiment)
+          Controlled by the "checkout_button" flag in Optimizely.
+          - Control variation: grey "Add to Cart" button
+          - Treatment variation: green "Buy Now — Free Shipping!" button
+          Different users see different buttons based on their
+          user ID (deterministic bucketing via MurmurHash).
+          The badge next to the button shows which variation the
+          current user is assigned to.
+          Use case: A/B testing UI elements to optimize conversions.
+        -->
         <div>
           <span class="use-case-label experiment">A/B Experiment &mdash; checkout_button</span>
           <br>
@@ -83,7 +133,7 @@
           <span id="checkout-variation-badge" class="variation-badge"></span>
         </div>
 
-        <!-- Code annotation -->
+        <!-- Expandable code snippet showing how the SDK code works for this experiment -->
         <details class="code-annotation">
           <summary>See the SDK code powering this</summary>
           <pre><span class="comment">// How the checkout button experiment works</span>
@@ -102,7 +152,18 @@
       </div>
     </div>
 
-    <!-- VIP Section (Targeted Delivery) -->
+    <!--
+      FLAG: vip_section (Targeted Delivery)
+      Controlled by the "vip_section" flag in Optimizely.
+      This flag uses an audience: "Premium Users" where the
+      custom attribute "plan" equals "premium".
+      - User with plan=premium → section visible
+      - User with plan=free → section hidden
+      The visibility is determined by the user's attributes,
+      not by a toggle. Changing the plan dropdown in the
+      inspector panel simulates a different user segment.
+      Use case: gating premium features by user attributes.
+    -->
     <div id="vip-section" class="vip-section">
       <span class="use-case-label targeted">Targeted Delivery &mdash; vip_section</span>
       <h2>&#11088; VIP Member Exclusive</h2>
@@ -114,6 +175,7 @@
         <div class="vip-perk">&#127775; Priority customer support</div>
       </div>
 
+      <!-- Expandable code snippet showing how targeted delivery works -->
       <details class="code-annotation" style="margin-top: 16px;">
         <summary>See the SDK code for targeted delivery</summary>
         <pre><span class="comment">// Targeted: only "premium" plan users see this section</span>
@@ -137,7 +199,22 @@
     </div>
   </div>
 
-  <!-- SDK Inspector Panel -->
+  <!--
+    ============================================================
+    SDK INSPECTOR PANEL ("What the SDK Sees")
+    A read-only floating panel that shows:
+    1. INPUT: The user context being sent to the SDK (user ID
+       and attributes). In a real app this comes from the auth
+       system. Here you can change it to simulate different users.
+    2. OUTPUT: The SDK's decision for each flag (ON/OFF/variation).
+       These decisions come from Optimizely — this panel just
+       displays them.
+    3. STATUS: SDK connection state, datafile revision, last poll.
+
+    This panel does NOT control flags. All flag changes happen
+    in app.optimizely.com. The panel is observability only.
+    ============================================================
+  -->
   <div id="control-panel" class="control-panel" style="display:none;">
     <div class="panel-header" onclick="togglePanel()">
       <span>&#128269; What the SDK Sees</span>
@@ -147,7 +224,13 @@
 
       <div class="panel-notice">Read-only &mdash; toggle flags in <strong>app.optimizely.com</strong> to change these decisions</div>
 
-      <!-- Input: User Context -->
+      <!--
+        SECTION 1: INPUT — What your app sends to the SDK
+        The user ID determines A/B test bucketing (which variation).
+        The attributes determine audience matching (targeted delivery).
+        Changing these and clicking "Evaluate" re-runs all flag
+        decisions with the new user context.
+      -->
       <div class="panel-section">
         <div class="panel-section-title">&#9654; Your app sends this</div>
         <div class="panel-section-hint">In a real app, this comes from your auth system. Change it here to simulate different users.</div>
@@ -155,6 +238,7 @@
           <input type="text" id="user-id-input" value="user-123" placeholder="User ID" onkeydown="if(event.key==='Enter')updateUser()">
           <button id="evaluate-btn" class="btn-sm" onclick="updateUser()">Evaluate</button>
         </div>
+        <!-- Dropdowns auto-evaluate on change (no need to click Evaluate) -->
         <div class="user-input-group">
           <select id="user-plan-select" onchange="updateUser()">
             <option value="free">plan: free</option>
@@ -169,7 +253,13 @@
         </div>
       </div>
 
-      <!-- Output: SDK Decisions -->
+      <!--
+        SECTION 2: OUTPUT — What the SDK decided for each flag
+        These values come from evaluating the datafile against
+        the current user context. They update when:
+        - You change the user context and click Evaluate
+        - The SDK polls a new datafile from Optimizely (~30s)
+      -->
       <div class="panel-section">
         <div class="panel-section-title">&#9654; SDK decides this</div>
         <div class="flag-row">
@@ -194,18 +284,33 @@
         </div>
       </div>
 
-      <!-- Status Bar -->
+      <!--
+        SECTION 3: STATUS BAR
+        Shows SDK connection health, the datafile revision number
+        (increments each time a flag changes in Optimizely), and
+        the last time the SDK polled for updates.
+      -->
       <div class="panel-status-bar">
         <span><span id="sdk-status-dot" class="status-dot yellow"></span><span id="sdk-status-text">Connecting...</span></span>
         <span>Rev: <span id="datafile-revision">&mdash;</span></span>
         <span id="last-updated">&mdash;</span>
       </div>
 
+      <!-- Clears the saved SDK key from localStorage and reloads -->
       <button class="btn-disconnect" onclick="disconnect()">Disconnect &amp; Reset SDK Key</button>
     </div>
   </div>
 
-  <!-- Optimizely SDK -->
+  <!--
+    ============================================================
+    SCRIPTS
+    1. Optimizely SDK — loaded from CDN, provides the global
+       window.optimizelySdk object used to create the client,
+       evaluate flags, and listen for datafile updates.
+    2. script.js — our application code that connects the SDK
+       to the UI elements above.
+    ============================================================
+  -->
   <script src="https://unpkg.com/@optimizely/optimizely-sdk@5/dist/optimizely.browser.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
