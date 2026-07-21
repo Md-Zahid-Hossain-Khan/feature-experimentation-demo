@@ -276,7 +276,7 @@ function evaluateCheckoutButton(user) {
 
   // Determine if this is the control or treatment variation
   const vKey = decision.variationKey.toLowerCase();
-  const isControl = vKey === 'off' || vKey === 'control' || vKey.includes('a');
+  const isControl = vKey === 'off' || vKey === 'control' || vKey === 'variation_a' || vKey === 'a';
 
   if (isControl) {
     btn.className = 'btn-checkout control';
@@ -325,7 +325,7 @@ function evaluatePricingDisplay(user) {
   // Check if the variable has a value (set in Optimizely per variation)
   const priceText = decision.variables && decision.variables['price_text'];
   const vKey = (decision.variationKey || '').toLowerCase();
-  const isControl = vKey === 'off' || vKey === 'control' || vKey.includes('a');
+  const isControl = vKey === 'off' || vKey === 'control' || vKey === 'variation_a' || vKey === 'a';
 
   if (priceText) {
     // Variable is set — use it directly. This is the ideal path:
